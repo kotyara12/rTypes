@@ -42,5 +42,14 @@ typedef enum {
   OPT_TYPE_TIMESPAN  = 13
 } param_type_t;
 
+/**
+ * Result of a call to a third-party REST API
+ * */
+typedef enum { 
+  API_OK             = 0, 
+  API_ERROR          = 1,
+  API_ERROR_HTTP     = 2
+} api_status_t;
+
 #endif // __RTYPES_H__
 
