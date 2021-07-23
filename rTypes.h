@@ -19,7 +19,8 @@
 typedef enum { 
   OPT_KIND_PARAMETER = 0, 
   OPT_KIND_OTA       = 1,
-  OPT_KIND_COMMAND   = 2
+  OPT_KIND_COMMAND   = 2,
+  OPT_KIND_DATA      = 3,
 } param_kind_t;
 
 /**
