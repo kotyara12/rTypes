@@ -51,5 +51,21 @@ typedef enum {
   API_ERROR_HTTP     = 2
 } api_status_t;
 
+typedef uint32_t timespan_t;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+bool checkTimespan(struct tm timeinfo, timespan_t timespan);
+bool checkTimespanTime(time_t time, timespan_t timespan);
+bool checkTimespanTimeEx(time_t time, timespan_t timespan, bool in_range);
+bool checkTimespanNow(timespan_t timespan);
+bool checkTimespanNowEx(timespan_t timespan, bool in_range);
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // __RTYPES_H__
 
