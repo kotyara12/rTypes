@@ -51,6 +51,16 @@ typedef enum {
   API_ERROR_HTTP     = 2
 } api_status_t;
 
+/**
+ * Automatic shift of the range limits
+ * */
+typedef enum { 
+  LIM_AUTOSHIFT_OFF  = 0,
+  LIM_AUTOSHIFT_ALL  = 1,
+  LIM_AUTOSHIFT_LOW  = 2,
+  LIM_AUTOSHIFT_HIGH = 3
+  } limits_autoshift_t;
+
 typedef uint32_t timespan_t;
 
 #ifdef __cplusplus
