@@ -61,9 +61,28 @@ typedef enum {
   LIM_AUTOSHIFT_ALL  = 1,
   LIM_AUTOSHIFT_LOW  = 2,
   LIM_AUTOSHIFT_HIGH = 3
-  } limits_autoshift_t;
+} limits_autoshift_t;
 
 typedef uint32_t timespan_t;
+
+/**
+ * Fire and Security System and RX433 Messages
+ * */
+typedef enum { 
+  RTM_WIRED          = 0,  
+  RTM_RS232          = 1,
+  RTM_RS485          = 2,
+  RTM_RX433          = 3,
+  RTM_MQTT           = 4,
+  RTM_TELEGRAM       = 5
+} reciever_type_t;
+
+typedef struct {
+  reciever_type_t source;
+  uint16_t address;
+  uint16_t length;
+  uint32_t value;
+} reciever_data_t;  
 
 #ifdef __cplusplus
 extern "C" {
