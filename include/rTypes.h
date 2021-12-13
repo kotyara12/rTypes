@@ -12,16 +12,18 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "esp_bit_defs.h"
 
 /**
  * Parameter kinds
  * */
 typedef enum { 
-  OPT_KIND_PARAMETER        = 0,   // Parameter or setting
-  OPT_KIND_LOCDATA_ONLINE   = 1,   // External local input: online only
-  OPT_KIND_LOCDATA_STORED   = 2,   // External local input: online, keeping the last value (can consume NVS pages a lot)
-  OPT_KIND_COMMAND          = 3,   // Specialized: commands
-  OPT_KIND_OTA              = 4    // Specialized: OTA command
+  OPT_KIND_PARAMETER          = 0,   // Parameter or setting for this device
+  OPT_KIND_PARAMETER_LOCATION = 1,   // Parameter or setting common to all location devices
+  OPT_KIND_LOCDATA_ONLINE     = 2,   // External local input: online only
+  OPT_KIND_LOCDATA_STORED     = 3,   // External local input: online, keeping the last value (can consume NVS pages a lot)
+  OPT_KIND_COMMAND            = 4,   // Specialized: commands
+  OPT_KIND_OTA                = 5    // Specialized: OTA command
 } param_kind_t;
 
 /**
@@ -63,8 +65,6 @@ typedef enum {
   LIM_AUTOSHIFT_HIGH = 3
 } limits_autoshift_t;
 
-typedef uint32_t timespan_t;
-
 /**
  * Fire and Security System and RX433 Messages
  * */
@@ -84,6 +84,21 @@ typedef struct {
   uint32_t value;
 } reciever_data_t;  
 
+typedef uint32_t timespan_t;
+typedef enum {
+  WEEK_EMPTY = 0,
+  WEEK_SUNDAY,
+  WEEK_MONDAY,
+  WEEK_TUESDAY,
+  WEEK_WEDNESDAY,
+  WEEK_THURSDAY,
+  WEEK_FRIDAY,
+  WEEK_SATURDAY,
+  WEEK_WEEKDAYS,
+  WEEK_WEEKEND,
+  WEEK_ANY
+} weekdays_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -93,6 +108,7 @@ bool checkTimespanTime(time_t time, timespan_t timespan);
 bool checkTimespanTimeEx(time_t time, timespan_t timespan, bool in_range);
 bool checkTimespanNow(timespan_t timespan);
 bool checkTimespanNowEx(timespan_t timespan, bool in_range);
+bool checkWeekday(struct tm timeinfo, weekdays_t day);
 
 #ifdef __cplusplus
 }

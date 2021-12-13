@@ -65,3 +65,19 @@ bool checkTimespanNowEx(timespan_t timespan, bool in_range)
   return checkTimespanTimeEx(now, timespan, in_range);
 }
 
+bool checkWeekday(struct tm timeinfo, weekdays_t day)
+{
+  switch (day) {
+    case WEEK_SUNDAY:    return timeinfo.tm_wday == 0;
+    case WEEK_MONDAY:    return timeinfo.tm_wday == 1;
+    case WEEK_TUESDAY:   return timeinfo.tm_wday == 2;
+    case WEEK_WEDNESDAY: return timeinfo.tm_wday == 3;
+    case WEEK_THURSDAY:  return timeinfo.tm_wday == 4;
+    case WEEK_FRIDAY:    return timeinfo.tm_wday == 5;
+    case WEEK_SATURDAY:  return timeinfo.tm_wday == 6;
+    case WEEK_WEEKDAYS:  return (timeinfo.tm_wday > 0) && (timeinfo.tm_wday < 6);
+    case WEEK_WEEKEND:   return (timeinfo.tm_wday == 0) || (timeinfo.tm_wday == 6);
+    case WEEK_ANY:       return true;
+    default:             return false;
+  };
+}
