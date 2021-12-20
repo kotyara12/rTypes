@@ -1,3 +1,3 @@
 # rTypes
 
-Unified type and struct declarations
+Объявления общих типов и структур, использующихся в других модулях
