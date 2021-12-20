@@ -1,6 +1,6 @@
 /* 
    EN: Unified type and struct declarations
-   RU: Обявления общих типов и структур для остальных модулей
+   RU: Объявления общих типов и структур для остальных модулей
    --------------------------
    (с) 2021 Разживин Александр | Razzhivin Alexander
    kotyara12@yandex.ru | https://kotyara12.ru | tg: @kotyara1971
