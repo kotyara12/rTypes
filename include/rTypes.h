@@ -15,6 +15,17 @@
 #include "esp_bit_defs.h"
 
 /**
+ * Callback function for controlling relays from various subroutines
+ * */
+typedef bool (*cb_relay_control_t) (bool relay_state);
+
+/**
+ * Callback function for posting data to MQTT brocker
+ * */
+typedef bool (*cb_mqtt_publish_t) (void* sender, char* topic, char* payload, uint8_t qos, bool retained, bool forced, bool free_topic, bool free_payload);
+
+
+/**
  * Parameter kinds
  * */
 typedef enum { 
@@ -69,19 +80,20 @@ typedef enum {
  * Fire and Security System and RX433 Messages
  * */
 typedef enum { 
-  RTM_WIRED          = 0,  
-  RTM_RS232          = 1,
-  RTM_RS485          = 2,
-  RTM_RX433          = 3,
-  RTM_MQTT           = 4,
-  RTM_TELEGRAM       = 5
+  RTM_NONE           = 0,
+  RTM_WIRED          = 1,  
+  RTM_RS232          = 2,
+  RTM_RS485          = 3,
+  RTM_RX433          = 4,
+  RTM_MQTT           = 5,
+  RTM_TELEGRAM       = 6
 } reciever_type_t;
 
 typedef struct {
   reciever_type_t source;
   uint16_t address;
-  uint16_t length;
   uint32_t value;
+  uint16_t count;
 } reciever_data_t;  
 
 typedef uint32_t timespan_t;
