@@ -115,12 +115,12 @@ typedef enum {
 extern "C" {
 #endif
 
-bool checkTimespan(struct tm timeinfo, timespan_t timespan);
+bool checkTimespan(struct tm* timeinfo, timespan_t timespan);
 bool checkTimespanTime(time_t time, timespan_t timespan);
 bool checkTimespanTimeEx(time_t time, timespan_t timespan, bool in_range);
 bool checkTimespanNow(timespan_t timespan);
 bool checkTimespanNowEx(timespan_t timespan, bool in_range);
-bool checkWeekday(struct tm timeinfo, weekdays_t day);
+bool checkWeekday(struct tm* timeinfo, weekdays_t day);
 
 #ifdef __cplusplus
 }
