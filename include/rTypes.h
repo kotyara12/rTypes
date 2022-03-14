@@ -15,6 +15,51 @@
 #include "esp_bit_defs.h"
 
 /**
+ * Type of input data stream
+ * */
+typedef enum { 
+  IDS_NONE           = 0,
+  IDS_GPIO           = 1,  
+  IDS_RX433          = 2,
+  IDS_MQTT           = 3
+} source_type_t;
+
+/**
+ * GPIO pin and logic level details :: 32 bit
+ * */
+typedef struct {
+  uint8_t bus;      // I2C bus +1 for expanders, 0 for internal ports
+  uint8_t address;  // I2C address for expanders, 0 for internal ports
+  uint8_t pin;      // Chip pin number
+  uint8_t value;    // Logic level: 0 or 1
+} gpio_data_t;
+
+/**
+ * Data packet from receiver RX433 :: 40 bit
+ * */
+typedef struct {
+  uint8_t  protocol;
+  uint32_t value;
+} rx433_data_t;
+
+/**
+ * Data in mixed input stream :: 40+8+16 = 64 bit
+ * */
+typedef struct {
+  source_type_t source;
+  union {
+    gpio_data_t  gpio;
+    rx433_data_t rx433;
+  };
+  uint16_t count;
+} input_data_t;  
+
+/**
+ * Callback function to change the logic level on the input GPIO
+ * */
+typedef void (*cb_gpio_change_t) (void* source, gpio_data_t data, uint32_t duration);
+
+/**
  * Callback function for controlling relays from various subroutines
  * */
 typedef bool (*cb_relay_control_t) (bool relay_state);
@@ -23,7 +68,6 @@ typedef bool (*cb_relay_control_t) (bool relay_state);
  * Callback function for posting data to MQTT brocker
  * */
 typedef bool (*cb_mqtt_publish_t) (void* sender, char* topic, char* payload, uint8_t qos, bool retained, bool forced, bool free_topic, bool free_payload);
-
 
 /**
  * Parameter kinds
@@ -75,26 +119,6 @@ typedef enum {
   LIM_AUTOSHIFT_LOW  = 2,
   LIM_AUTOSHIFT_HIGH = 3
 } limits_autoshift_t;
-
-/**
- * Fire and Security System and RX433 Messages
- * */
-typedef enum { 
-  RTM_NONE           = 0,
-  RTM_WIRED          = 1,  
-  RTM_RS232          = 2,
-  RTM_RS485          = 3,
-  RTM_RX433          = 4,
-  RTM_MQTT           = 5,
-  RTM_TELEGRAM       = 6
-} reciever_type_t;
-
-typedef struct {
-  reciever_type_t source;
-  uint16_t address;
-  uint32_t value;
-  uint16_t count;
-} reciever_data_t;  
 
 typedef uint32_t timespan_t;
 typedef enum {
