@@ -35,6 +35,15 @@ typedef struct {
 } gpio_data_t;
 
 /**
+ * External data :: 40 bit
+ * */
+typedef struct {
+  uint32_t id;       // External data ID
+  uint8_t  value;    // Logic level: 0 or 1
+} ext_data_t;
+
+
+/**
  * Data packet from receiver RX433 :: 40 bit
  * */
 typedef struct {
@@ -50,6 +59,7 @@ typedef struct {
   union {
     gpio_data_t  gpio;
     rx433_data_t rx433;
+    ext_data_t   ext;
   };
   uint16_t count;
 } input_data_t;  
@@ -77,8 +87,10 @@ typedef enum {
   OPT_KIND_PARAMETER_LOCATION = 1,   // Parameter or setting common to all location devices
   OPT_KIND_LOCDATA_ONLINE     = 2,   // External local input: online only
   OPT_KIND_LOCDATA_STORED     = 3,   // External local input: online, keeping the last value (can consume NVS pages a lot)
-  OPT_KIND_COMMAND            = 4,   // Specialized: commands
-  OPT_KIND_OTA                = 5    // Specialized: OTA command
+  OPT_KIND_EXTDATA_ONLINE     = 4,   // External data: fixed topic, online only
+  OPT_KIND_EXTDATA_STORED     = 5,   // External data: fixed topic, keeping the last value (can consume NVS pages a lot)
+  OPT_KIND_COMMAND            = 6,   // Specialized: commands
+  OPT_KIND_OTA                = 7    // Specialized: OTA command
 } param_kind_t;
 
 /**
