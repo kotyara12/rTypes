@@ -109,7 +109,7 @@ typedef enum {
   OPT_TYPE_FLOAT     = 9,
   OPT_TYPE_DOUBLE    = 10,
   OPT_TYPE_STRING    = 11,
-  OPT_TYPE_TIME      = 12,
+  OPT_TYPE_TIMEVAL   = 12,
   OPT_TYPE_TIMESPAN  = 13
 } param_type_t;
 
