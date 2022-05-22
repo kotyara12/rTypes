@@ -85,12 +85,13 @@ typedef bool (*cb_mqtt_publish_t) (void* sender, char* topic, char* payload, uin
 typedef enum { 
   OPT_KIND_PARAMETER          = 0,   // Parameter or setting for this device
   OPT_KIND_PARAMETER_LOCATION = 1,   // Parameter or setting common to all location devices
-  OPT_KIND_LOCDATA_ONLINE     = 2,   // External local input: online only
-  OPT_KIND_LOCDATA_STORED     = 3,   // External local input: online, keeping the last value (can consume NVS pages a lot)
-  OPT_KIND_EXTDATA_ONLINE     = 4,   // External data: fixed topic, online only
-  OPT_KIND_EXTDATA_STORED     = 5,   // External data: fixed topic, keeping the last value (can consume NVS pages a lot)
-  OPT_KIND_COMMAND            = 6,   // Specialized: commands
-  OPT_KIND_OTA                = 7    // Specialized: OTA command
+  OPT_KIND_PARAMETER_ONLINE   = 2,   // Parameter or setting for this device without saving to NVS
+  OPT_KIND_LOCDATA_ONLINE     = 3,   // External local input: online only
+  OPT_KIND_LOCDATA_STORED     = 4,   // External local input: online, keeping the last value (can consume NVS pages a lot)
+  OPT_KIND_EXTDATA_ONLINE     = 5,   // External data: fixed topic, online only
+  OPT_KIND_EXTDATA_STORED     = 6,   // External data: fixed topic, keeping the last value (can consume NVS pages a lot)
+  OPT_KIND_COMMAND            = 7,   // Specialized: commands
+  OPT_KIND_OTA                = 8    // Specialized: OTA command
 } param_kind_t;
 
 /**
@@ -117,10 +118,49 @@ typedef enum {
  * Result of a call to a third-party REST API
  * */
 typedef enum { 
-  API_OK             = 0, 
-  API_ERROR          = 1,
-  API_ERROR_HTTP     = 2
+  API_OK             = 0,  // Everything is fine 
+  API_ERROR_API      = 1,  // API returned an error (bad request)
+  API_ERROR_HTTP     = 3,  // Transport error (no wifi or internet, server not available)
+  API_ERROR_WAIT     = 4,  // Please try again later
+  API_ERROR          = 5   // Other bullshit
 } api_status_t;
+
+/**
+ * Notification kinds
+ * */
+typedef enum {
+  MK_MAIN = 0,
+  MK_SERVICE,
+  MK_PARAMS,
+  MK_SECURITY
+} msg_kind_t;  
+
+/**
+ * Notification priorities
+ * Messages with a lower priority may be discarded if there is no Internet access
+ * */
+typedef enum {
+  MP_LOW = 0,    
+  MP_REDUCED,    
+  MP_ORDINARY,   
+  MP_INCREASED,  
+  MP_HIGH,       
+  MP_CRITICAL    
+} msg_priority_t;
+
+/**
+ * Notification options
+ * bits: xKKKPPPA
+ *    7: x   - reserved
+ *  5-6: KKK - msg_kind_t
+ *  1-4: PPP - message_priority_t
+ *    0: A   - alert / sound notification
+ * */
+typedef uint8_t msg_options_t;
+msg_options_t encMsgOptions(msg_kind_t kind, bool notify, msg_priority_t priority);
+bool decMsgOptionsNotify(msg_options_t options);
+msg_kind_t decMsgOptionsKind(msg_options_t options);
+msg_priority_t decMsgOptionsPriority(msg_options_t options);
 
 /**
  * Automatic shift of the range limits

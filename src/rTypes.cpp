@@ -1,6 +1,26 @@
 #include "rTypes.h"
 #include "time.h"
 
+msg_options_t encMsgOptions(msg_kind_t kind, bool notify, msg_priority_t priority)
+{
+  return ((uint8_t)kind & 0x07) << 4 | ((uint8_t)priority & 0x07) << 1 | ((uint8_t)notify & 0x01);
+}
+
+bool decMsgOptionsNotify(msg_options_t options)
+{
+  return (options & 0x01) != 0;
+}
+
+msg_kind_t decMsgOptionsKind(msg_options_t options)
+{
+  return msg_kind_t((options >> 4) & 0x07);
+}
+
+msg_priority_t decMsgOptionsPriority(msg_options_t options)
+{
+  return msg_priority_t((options >> 1) & 0x07);
+}
+
 bool checkTimespan(struct tm* timeinfo, timespan_t timespan)
 {
   if (timespan > 0) {
