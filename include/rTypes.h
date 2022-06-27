@@ -115,17 +115,6 @@ typedef enum {
 } param_type_t;
 
 /**
- * Result of a call to a third-party REST API
- * */
-typedef enum { 
-  API_OK             = 0,  // Everything is fine 
-  API_ERROR_API      = 1,  // API returned an error (bad request)
-  API_ERROR_HTTP     = 3,  // Transport error (no wifi or internet, server not available)
-  API_ERROR_WAIT     = 4,  // Please try again later
-  API_ERROR          = 5   // Other bullshit
-} api_status_t;
-
-/**
  * Notification kinds
  * */
 typedef enum {
