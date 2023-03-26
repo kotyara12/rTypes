@@ -37,7 +37,7 @@ bool checkThreshold(float value, threshold_type_t type, float threshold)
   return false;
 }
 
-bool checkThresholdFloat(float value, threshold_float_t* threshold, bool above_threshold, bool current_state)
+bool checkThresholdFloat(float value, threshold_float_t* threshold, bool current_state)
 {
   if (threshold) {
     if (threshold->hysteresis_type == HYSTERESIS_TURN_ON) {
@@ -45,23 +45,23 @@ bool checkThresholdFloat(float value, threshold_float_t* threshold, bool above_t
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
           ? threshold->threshold  
-          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
             threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis);
     } else if (threshold->hysteresis_type == HYSTERESIS_TURN_OFF) {
       // Hysteresis only for switching off
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
-          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
-            threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis 
+          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
+            threshold->threshold - threshold->hysteresis : threshold->threshold + threshold->hysteresis 
           : threshold->threshold);
     } else if (threshold->hysteresis_type == HYSTERESIS_SYMMETRIC) {
       // Hysteresis for both switching on and switching off in half
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
-          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
             threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2) 
-          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
-            threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2));
+          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
+            threshold->threshold - (threshold->hysteresis / 2) : threshold->threshold + (threshold->hysteresis / 2));
     } else {
       // Hysteresis is ignored
       return checkThreshold(value, threshold->threshold_type, threshold->threshold);

@@ -132,10 +132,10 @@ typedef enum {
 } threshold_type_t;
 
 typedef struct {
-  float threshold;
   threshold_type_t threshold_type;
-  float hysteresis;
+  float threshold;
   hysteresis_type_t hysteresis_type;
+  float hysteresis;
 } threshold_float_t;
 
 bool checkThresholdFloat(float value, threshold_float_t* threshold, bool current_state);
