@@ -115,6 +115,32 @@ typedef enum {
 } param_type_t;
 
 /**
+ * Boundary checking
+*/
+typedef enum { 
+  HYSTERESIS_NONE             = 0,
+  HYSTERESIS_TURN_ON          = 1,
+  HYSTERESIS_TURN_OFF         = 2,
+  HYSTERESIS_SYMMETRIC        = 3
+} hysteresis_type_t;
+
+typedef enum { 
+  THRESHOLD_MORE_OR_EQUAL     = 0,
+  THRESHOLD_MORE              = 1,
+  THRESHOLD_LESS_OR_EQUAL     = 2,
+  THRESHOLD_LESS              = 3
+} threshold_type_t;
+
+typedef struct {
+  float threshold;
+  threshold_type_t threshold_type;
+  float hysteresis;
+  hysteresis_type_t hysteresis_type;
+} threshold_float_t;
+
+bool checkThresholdFloat(float value, threshold_float_t* threshold, bool current_state);
+
+/**
  * Notification kinds
  * */
 typedef enum {
@@ -176,6 +202,11 @@ typedef enum {
   WEEK_ANY
 } weekdays_t;
 
+typedef struct {
+  weekdays_t weekdays;
+  timespan_t timespan;
+} schedule_t;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -186,6 +217,7 @@ bool checkTimespanTimeEx(time_t time, timespan_t timespan, bool in_range);
 bool checkTimespanNow(timespan_t timespan);
 bool checkTimespanNowEx(timespan_t timespan, bool in_range);
 bool checkWeekday(struct tm* timeinfo, weekdays_t day);
+bool checkSchedule(struct tm* timeinfo, schedule_t* schedule);
 
 #ifdef __cplusplus
 }

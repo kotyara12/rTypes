@@ -1,5 +1,6 @@
 #include "rTypes.h"
 #include "time.h"
+#include "math.h"
 
 msg_options_t encMsgOptions(msg_kind_t kind, bool notify, msg_priority_t priority)
 {
@@ -19,6 +20,54 @@ msg_kind_t decMsgOptionsKind(msg_options_t options)
 msg_priority_t decMsgOptionsPriority(msg_options_t options)
 {
   return msg_priority_t((options >> 1) & 0x07);
+}
+
+bool checkThreshold(float value, threshold_type_t type, float threshold)
+{
+  if (!isnan(value) && (!isnan(threshold))) {
+    if (type == THRESHOLD_MORE_OR_EQUAL) 
+      return value >= threshold;
+    else if (type == THRESHOLD_MORE) 
+      return value > threshold;
+    else if (type == THRESHOLD_LESS_OR_EQUAL) 
+      return value <= threshold;
+    else if (type == THRESHOLD_LESS) 
+      return value < threshold;
+  };
+  return false;
+}
+
+bool checkThresholdFloat(float value, threshold_float_t* threshold, bool above_threshold, bool current_state)
+{
+  if (threshold) {
+    if (threshold->hysteresis_type == HYSTERESIS_TURN_ON) {
+      // Hysteresis only for switching on
+      return checkThreshold(value, threshold->threshold_type, 
+        current_state 
+          ? threshold->threshold  
+          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+            threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis);
+    } else if (threshold->hysteresis_type == HYSTERESIS_TURN_OFF) {
+      // Hysteresis only for switching off
+      return checkThreshold(value, threshold->threshold_type, 
+        current_state 
+          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+            threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis 
+          : threshold->threshold);
+    } else if (threshold->hysteresis_type == HYSTERESIS_SYMMETRIC) {
+      // Hysteresis for both switching on and switching off in half
+      return checkThreshold(value, threshold->threshold_type, 
+        current_state 
+          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+            threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2) 
+          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) ? 
+            threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2));
+    } else {
+      // Hysteresis is ignored
+      return checkThreshold(value, threshold->threshold_type, threshold->threshold);
+    };
+  };
+  return false;
 }
 
 bool checkTimespan(struct tm* timeinfo, timespan_t timespan)
@@ -100,4 +149,9 @@ bool checkWeekday(struct tm* timeinfo, weekdays_t day)
     case WEEK_ANY:       return true;
     default:             return false;
   };
+}
+
+bool checkSchedule(struct tm* timeinfo, schedule_t* schedule)
+{
+  return (timeinfo) && (schedule) && checkWeekday(timeinfo, schedule->weekdays) && checkTimespan(timeinfo, schedule->timespan);
 }
