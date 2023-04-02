@@ -14,6 +14,10 @@
 #include <stdbool.h>
 #include "esp_bit_defs.h"
 
+#define TIMESPAN_NONE     0UL
+#define TIMESPAN_24HOURS  2400UL
+#define TIMESPAN_TARIFF2  22000700UL
+
 /**
  * Type of input data stream
  * */
