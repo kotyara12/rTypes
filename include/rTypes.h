@@ -123,10 +123,13 @@ typedef enum {
 */
 typedef enum { 
   HYSTERESIS_NONE             = 0,
-  HYSTERESIS_TURN_ON          = 1,
-  HYSTERESIS_TURN_OFF         = 2,
+  HYSTERESIS_SWITCH_ON        = 1,
+  HYSTERESIS_SWITCH_OFF       = 2,
   HYSTERESIS_SYMMETRIC        = 3
 } hysteresis_type_t;
+
+#define HYSTERESIS_TYPE_MIN HYSTERESIS_NONE
+#define HYSTERESIS_TYPE_MAX HYSTERESIS_SYMMETRIC
 
 typedef enum { 
   THRESHOLD_MORE_OR_EQUAL     = 0,
@@ -134,6 +137,9 @@ typedef enum {
   THRESHOLD_LESS_OR_EQUAL     = 2,
   THRESHOLD_LESS              = 3
 } threshold_type_t;
+
+#define THRESHOLD_TYPE_MIN THRESHOLD_MORE_OR_EQUAL
+#define THRESHOLD_TYPE_MAX THRESHOLD_LESS
 
 typedef struct {
   threshold_type_t threshold_type;
@@ -193,17 +199,17 @@ typedef enum {
 
 typedef uint32_t timespan_t;
 typedef enum {
-  WEEK_EMPTY = 0,
-  WEEK_SUNDAY,
-  WEEK_MONDAY,
-  WEEK_TUESDAY,
-  WEEK_WEDNESDAY,
-  WEEK_THURSDAY,
-  WEEK_FRIDAY,
-  WEEK_SATURDAY,
-  WEEK_WEEKDAYS,
-  WEEK_WEEKEND,
-  WEEK_ANY
+  WEEK_EMPTY         = 0,
+  WEEK_SUNDAY        = 1,
+  WEEK_MONDAY        = 2,
+  WEEK_TUESDAY       = 3,
+  WEEK_WEDNESDAY     = 4,
+  WEEK_THURSDAY      = 5,
+  WEEK_FRIDAY        = 6,
+  WEEK_SATURDAY      = 7,
+  WEEK_WEEKDAYS      = 8,
+  WEEK_WEEKEND       = 9,
+  WEEK_ANY           = 10
 } weekdays_t;
 
 typedef struct {

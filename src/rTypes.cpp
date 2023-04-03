@@ -40,14 +40,14 @@ bool checkThreshold(float value, threshold_type_t type, float threshold)
 bool checkThresholdFloat(float value, threshold_float_t* threshold, bool current_state)
 {
   if (threshold) {
-    if (threshold->hysteresis_type == HYSTERESIS_TURN_ON) {
+    if (threshold->hysteresis_type == HYSTERESIS_SWITCH_ON) {
       // Hysteresis only for switching on
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
           ? threshold->threshold  
           : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
             threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis);
-    } else if (threshold->hysteresis_type == HYSTERESIS_TURN_OFF) {
+    } else if (threshold->hysteresis_type == HYSTERESIS_SWITCH_OFF) {
       // Hysteresis only for switching off
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
