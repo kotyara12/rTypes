@@ -94,8 +94,10 @@ typedef enum {
   OPT_KIND_LOCDATA_STORED     = 4,   // External local input: online, keeping the last value (can consume NVS pages a lot)
   OPT_KIND_EXTDATA_ONLINE     = 5,   // External data: fixed topic, online only
   OPT_KIND_EXTDATA_STORED     = 6,   // External data: fixed topic, keeping the last value (can consume NVS pages a lot)
-  OPT_KIND_COMMAND            = 7,   // Specialized: commands
-  OPT_KIND_OTA                = 8    // Specialized: OTA command
+  OPT_KIND_SIGNAL             = 7,   // External control signal
+  OPT_KIND_SIGNAL_AUTOCLR     = 8,   // External control signal with automatic topic clear when received by the device
+  OPT_KIND_COMMAND            = 9,   // Specialized: commands
+  OPT_KIND_OTA                = 10   // Specialized: OTA command
 } param_kind_t;
 
 /**
