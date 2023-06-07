@@ -214,6 +214,17 @@ typedef enum {
   WEEK_ANY           = 10
 } weekdays_t;
 
+/**
+ * Dimensions of time intervals
+ * */
+typedef enum {
+  TI_MILLISECONDS    = 0,
+  TI_SECONDS         = 1,
+  TI_MINUTES         = 2,
+  TI_HOURS           = 3,
+  TI_DAYS            = 4
+} timeintv_t;
+
 typedef struct {
   weekdays_t weekdays;
   timespan_t timespan;
