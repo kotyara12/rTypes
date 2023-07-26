@@ -16,6 +16,7 @@
 
 #define TIMESPAN_NONE     0UL
 #define TIMESPAN_24HOURS  2400UL
+#define TIMESPAN_NIGHT    17000800UL
 #define TIMESPAN_TARIFF2  22000700UL
 
 /**
@@ -241,6 +242,7 @@ bool checkTimespanNow(timespan_t timespan);
 bool checkTimespanNowEx(timespan_t timespan, bool in_range);
 bool checkWeekday(struct tm* timeinfo, weekdays_t day);
 bool checkSchedule(struct tm* timeinfo, schedule_t* schedule);
+bool checkTimeInterval(time_t timestamp, uint32_t interval, timeintv_t dimension, bool expired);
 
 #ifdef __cplusplus
 }

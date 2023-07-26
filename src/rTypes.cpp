@@ -155,3 +155,26 @@ bool checkSchedule(struct tm* timeinfo, schedule_t* schedule)
 {
   return (timeinfo) && (schedule) && checkWeekday(timeinfo, schedule->weekdays) && checkTimespan(timeinfo, schedule->timespan);
 }
+
+bool checkTimeInterval(time_t timestamp, uint32_t interval, timeintv_t dimension, bool expired)
+{
+  time_t now = time(nullptr); 
+  if ((timestamp > 1000000000) && (now >= timestamp)) {
+    time_t _interval = (time_t)interval;
+    if (dimension == TI_MILLISECONDS) {
+      _interval = _interval / 1000;
+    } else if (dimension == TI_MINUTES) {
+      _interval = _interval * 60;
+    } else if (dimension == TI_HOURS) {
+      _interval = _interval * 60 * 60;
+    } else if (dimension == TI_DAYS) {
+      _interval = _interval * 60 * 60 * 24;
+    };
+    if (expired) {
+      return (now - timestamp) > _interval;
+    } else {
+      return (now - timestamp) <= _interval;
+    };
+  };
+  return false;
+}
