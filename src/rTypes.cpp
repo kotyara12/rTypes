@@ -22,17 +22,28 @@ msg_priority_t decMsgOptionsPriority(msg_options_t options)
   return msg_priority_t((options >> 1) & 0x07);
 }
 
-bool checkThreshold(float value, threshold_type_t type, float threshold)
+bool checkThreshold(float value, threshold_type_t type, float threshold, bool current_state)
 {
   if (!isnan(value) && (!isnan(threshold))) {
-    if (type == THRESHOLD_MORE_OR_EQUAL) 
-      return value >= threshold;
-    else if (type == THRESHOLD_MORE) 
-      return value > threshold;
-    else if (type == THRESHOLD_LESS_OR_EQUAL) 
-      return value <= threshold;
-    else if (type == THRESHOLD_LESS) 
-      return value < threshold;
+    if (current_state) {
+      if (type == THRESHOLD_MORE_OR_EQUAL) 
+        return value > threshold;
+      else if (type == THRESHOLD_MORE) 
+        return value >= threshold;
+      else if (type == THRESHOLD_LESS_OR_EQUAL) 
+        return value < threshold;
+      else if (type == THRESHOLD_LESS) 
+        return value <= threshold;
+    } else {
+      if (type == THRESHOLD_MORE_OR_EQUAL) 
+        return value >= threshold;
+      else if (type == THRESHOLD_MORE) 
+        return value > threshold;
+      else if (type == THRESHOLD_LESS_OR_EQUAL) 
+        return value <= threshold;
+      else if (type == THRESHOLD_LESS) 
+        return value < threshold;
+    };
   };
   return false;
 }
@@ -45,26 +56,29 @@ bool checkThresholdFloat(float value, threshold_float_t* threshold, bool current
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
           ? threshold->threshold  
-          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
-            threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis);
+          : ((threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE)) ? 
+            threshold->threshold + threshold->hysteresis : threshold->threshold - threshold->hysteresis,
+        current_state);
     } else if (threshold->hysteresis_type == HYSTERESIS_SWITCH_OFF) {
       // Hysteresis only for switching off
       return checkThreshold(value, threshold->threshold_type, 
         current_state 
-          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
+          ? ((threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE)) ? 
             threshold->threshold - threshold->hysteresis : threshold->threshold + threshold->hysteresis 
-          : threshold->threshold);
+          : threshold->threshold,
+        current_state);
     } else if (threshold->hysteresis_type == HYSTERESIS_SYMMETRIC) {
       // Hysteresis for both switching on and switching off in half
-      return checkThreshold(value, threshold->threshold_type, 
+      return checkThreshold(value, threshold->threshold_type,
         current_state 
-          ? (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
-            threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2) 
-          : (threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE) ? 
-            threshold->threshold - (threshold->hysteresis / 2) : threshold->threshold + (threshold->hysteresis / 2));
+          ? ((threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE)) ? 
+            threshold->threshold - (threshold->hysteresis / 2) : threshold->threshold + (threshold->hysteresis / 2) 
+          : ((threshold->threshold_type == THRESHOLD_MORE_OR_EQUAL) || (threshold->threshold_type == THRESHOLD_MORE)) ? 
+            threshold->threshold + (threshold->hysteresis / 2) : threshold->threshold - (threshold->hysteresis / 2),
+        current_state);
     } else {
       // Hysteresis is ignored
-      return checkThreshold(value, threshold->threshold_type, threshold->threshold);
+      return checkThreshold(value, threshold->threshold_type, threshold->threshold, current_state);
     };
   };
   return false;
