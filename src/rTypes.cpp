@@ -115,7 +115,7 @@ bool checkTimespan(struct tm* timeinfo, timespan_t timespan)
 bool checkTimespanTime(time_t time, timespan_t timespan)
 {
   if ((time > 1000000000) && (timespan > 0)) {
-    static struct tm ti; 
+    struct tm ti; 
     localtime_r(&time, &ti);
     return checkTimespan(&ti, timespan);
   };
@@ -125,7 +125,7 @@ bool checkTimespanTime(time_t time, timespan_t timespan)
 bool checkTimespanTimeEx(time_t time, timespan_t timespan, bool in_range)
 {
   if ((time > 1000000000) && (timespan > 0)) {
-    static struct tm ti; 
+    struct tm ti; 
     localtime_r(&time, &ti);
     if (in_range) {
       return checkTimespan(&ti, timespan);
