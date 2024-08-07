@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <time.h>
 #include "esp_bit_defs.h"
 
 #define TIMESPAN_NONE     0UL
